@@ -35,8 +35,8 @@ admin_cmds = [
 
 board_cmds = [
     'hubot <board, interns> - Helps add <board> or <interns> to channel.',
-    'hubot <board, intern> help - Displays all of the admin help commands that this bot knows about.',
-    'hubot <board, intern> help <query> - Displays all admin help commands that match <query>.',
+    'hubot <board, intern> help - Displays all of the board help commands that this bot knows about.',
+    'hubot <board, intern> help <query> - Displays all board help commands that match <query>.',
     'hubot auth list <role> assigned users - List users assigned to <role>.',
     'hubot auth list <user> roles - List assigned roles of <user>. ',
     'hubot auth list assignments - List names and their assigned roles.',
@@ -68,13 +68,14 @@ module.exports = (robot) ->
         res.send retval
 
     robot.respond /(?:board|intern) help(?:\s*$|(?: (.+)))?/i, (res) ->
-        role1 = 'board'
-        role2 = 'intern'
+        role1 = 'admin'
+        role2 = 'board'
+        role3 = 'intern'
         user = robot.brain.userForName(res.message.user.name)
         unless user?
             return res.reply 'You do not exist.'
-        unless robot.auth.hasRole(user, role1) or robot.auth.hasRole(user, role2)
-            return res.reply 'Access Denied. You need role \'' + role1 + '\' or \'' + role2 + '\' to perform this action.'
+        unless robot.auth.hasRole(user, role1) or robot.auth.hasRole(user, role2) or robot.auth.hasRole(user, role3)
+            return res.reply 'Access Denied. You need role \'' + role1 + ', \'' + role2 + '\', or \'' + role3 + '\' to perform this action.'
         query = res.match[1]
         if query
             board_cmds = board_cmds.filter (cmd) ->
